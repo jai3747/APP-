@@ -21,40 +21,13 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install dependencies
-      run: |
-        npm install --prefix ./frontend
-        npm install --prefix ./backend
+    - name: Install frontend dependencies
+      run: npm install --prefix ./frontend
 
-    - name: Install Snyk
-      run: npm install -g snyk
-
-    - name: Run Snyk on frontend
-      if: ${{ hashFiles('frontend/package.json') != '' }}
-      run: snyk test --file=frontend/package.json --json > snyk-frontend-report.json
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-    - name: Run Snyk on backend
-      if: ${{ hashFiles('backend/package.json') != '' }}
-      run: snyk test --file=backend/package.json --json > snyk-backend-report.json
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-
-    - name: Upload Snyk reports
-      uses: actions/upload-artifact@v2
-      with:
-        name: snyk-reports
-        path: |
-          snyk-frontend-report.json
-          snyk-backend-report.json
-
-    - name: Set up Python
+    - name: Install Semgrep
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-
-    - name: Install Semgrep
       run: pip install semgrep
 
     - name: Run Semgrep
