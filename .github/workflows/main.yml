@@ -3,10 +3,10 @@ name: Security Scan
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   snyk:
@@ -28,11 +28,6 @@ jobs:
 
       - name: Install Snyk
         run: npm install -g snyk
-
-      - name: Auth Snyk
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: snyk auth $SNYK_TOKEN
 
       - name: Run Snyk to check for vulnerabilities
         run: snyk test additional-repo
@@ -57,12 +52,5 @@ jobs:
       - name: Install Semgrep
         run: pip install semgrep
 
-      - name: Auth Semgrep
-        env:
-          SEMGREP_TOKEN: ${{ secrets.SEMGREP_TOKEN }}
-        run: semgrep --config p/ci --auth $SEMGREP_TOKEN additional-repo
-
       - name: Run Semgrep
-        env:
-          SEMGREP_TOKEN: ${{ secrets.SEMGREP_TOKEN }}
         run: semgrep --config "p/ci" additional-repo
