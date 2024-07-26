@@ -29,12 +29,26 @@ jobs:
       working-directory: ./backend
       run: npm install
 
-    - name: Snyk Scan
-      uses: snyk/actions/node@v1.5.0
+    - name: Run Snyk on frontend
+      uses: snyk/actions/node@master
       with:
         command: test
+        project_directory: ./frontend
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    - name: Run Snyk on backend
+      uses: snyk/actions/node@master
+      with:
+        command: test
+        project_directory: ./backend
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
 
     - name: Install Semgrep
       run: pip install semgrep
