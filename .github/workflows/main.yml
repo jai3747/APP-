@@ -29,13 +29,20 @@ jobs:
       working-directory: ./backend
       run: npm install
 
-    - name: Check for frontend package.json and run Snyk
-      if: ${{ hashFiles('frontend/package.json') != '' }}
-      run: snyk test --org=YOUR_ORG_NAME --file=frontend/package.json --json
+    - name: Install Snyk
+      run: npm install -g snyk
 
-    - name: Check for backend package.json and run Snyk
+    - name: Run Snyk on frontend
+      if: ${{ hashFiles('frontend/package.json') != '' }}
+      run: snyk test --file=frontend/package.json --json
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    - name: Run Snyk on backend
       if: ${{ hashFiles('backend/package.json') != '' }}
-      run: snyk test --org=YOUR_ORG_NAME --file=backend/package.json --json
+      run: snyk test --file=backend/package.json --json
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v2
