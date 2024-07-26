@@ -15,13 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: create directory
-        run : mkdir addtional  && cd addtional
+      - name: Create and navigate to directory
+        run: mkdir additional && cd additional && git clone https://github.com/jai3747/APP- .
 
-      - name: Clone additional repository
-        run: git clone https://github.com/jai3747/APP-
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-      - name: Set up Node.js name 
+      - name: Install Node.js dependencies
         run: npm install
 
       - name: Run npm audit
@@ -33,7 +35,6 @@ jobs:
       - name: Run ESLint
         run: npx eslint .
         
-    
       - name: Install Snyk
         run: npm install -g snyk
 
@@ -54,8 +55,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Clone additional repository
-        run: git clone https://github.com/jai3747/APP-.git additional-repo
+      - name: Create and navigate to directory
+        run: mkdir additional && cd additional && git clone https://github.com/jai3747/APP- .
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -66,4 +67,4 @@ jobs:
         run: pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep --config "p/ci" additional-repo
+        run: semgrep --config "p/ci" .
