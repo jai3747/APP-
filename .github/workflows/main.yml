@@ -21,13 +21,10 @@ jobs:
       with:
         node-version: '14'
 
-    - name: Install frontend dependencies
-      working-directory: ./frontend
-      run: npm install
-
-    - name: Install backend dependencies
-      working-directory: ./backend
-      run: npm install
+    - name: Install dependencies
+      run: |
+        npm install --prefix ./frontend
+        npm install --prefix ./backend
 
     - name: Install Snyk
       run: npm install -g snyk
@@ -68,3 +65,9 @@ jobs:
       with:
         name: semgrep-report
         path: semgrep-report.json
+
+    - name: Perform Code Scoring (Example Placeholder)
+      run: echo "Code scoring step placeholder"
+
+    - name: Perform Security Scanning (Example Placeholder)
+      run: echo "Security scanning step placeholder"
