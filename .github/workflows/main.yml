@@ -34,15 +34,23 @@ jobs:
 
     - name: Run Snyk on frontend
       if: ${{ hashFiles('frontend/package.json') != '' }}
-      run: snyk test --file=frontend/package.json --json
+      run: snyk test --file=frontend/package.json --json > snyk-frontend-report.json
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     - name: Run Snyk on backend
       if: ${{ hashFiles('backend/package.json') != '' }}
-      run: snyk test --file=backend/package.json --json
+      run: snyk test --file=backend/package.json --json > snyk-backend-report.json
       env:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+    - name: Upload Snyk reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: snyk-reports
+        path: |
+          snyk-frontend-report.json
+          snyk-backend-report.json
 
     - name: Set up Python
       uses: actions/setup-python@v2
