@@ -18,6 +18,9 @@ jobs:
       - name: Clone additional repository
         run: git clone https://github.com/jai3747/APP-.git additional-repo
 
+      - name: List files in cloned repository
+        run: ls -R additional-repo
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
