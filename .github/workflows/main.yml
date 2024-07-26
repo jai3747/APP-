@@ -30,6 +30,7 @@ jobs:
       run: npm install
 
     - name: Run Snyk on frontend
+      if: exists('frontend/package.json')
       uses: snyk/actions/node@master
       with:
         command: test
@@ -38,6 +39,7 @@ jobs:
         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
     - name: Run Snyk on backend
+      if: exists('backend/package.json')
       uses: snyk/actions/node@master
       with:
         command: test
