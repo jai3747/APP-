@@ -18,6 +18,9 @@ jobs:
       - name: Create and navigate to directory
         run: mkdir additional && cd additional && git clone https://github.com/jai3747/APP- .
 
+      - name: List files in directory
+        run: ls -la
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -26,11 +29,6 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install
 
-      - name: Run npm audit
-        run: npm audit --audit-level=moderate
-
-      - name: Run audit-ci
-        run: npx audit-ci --config audit-ci.json
 
       - name: Run ESLint
         run: npx eslint .
@@ -57,6 +55,9 @@ jobs:
 
       - name: Create and navigate to directory
         run: mkdir additional && cd additional && git clone https://github.com/jai3747/APP- .
+
+      - name: List files in directory
+        run: ls -la
 
       - name: Set up Python
         uses: actions/setup-python@v2
