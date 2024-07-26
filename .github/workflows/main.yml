@@ -19,7 +19,7 @@ jobs:
         run : mkdir addtional  && cd addtional
 
       - name: Clone additional repository
-        run: git clone https://github.com/jai3747/APP-.
+        run: git clone https://github.com/jai3747/APP-
 
       - name: List files in cloned repository
         run: ls -R additional
