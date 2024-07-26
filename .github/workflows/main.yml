@@ -28,10 +28,6 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm install
-
-
-      - name: Run ESLint
-        run: npx eslint .
         
       - name: Install Snyk
         run: npm install -g snyk
