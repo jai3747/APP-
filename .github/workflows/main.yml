@@ -1,0 +1,65 @@
+name: Security Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  snyk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Clone additional repository
+        run: git clone https://github.com/jai3747/APP-.git additional-repo
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Snyk
+        run: npm install -g snyk
+
+      - name: Auth Snyk
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk auth $SNYK_TOKEN
+
+      - name: Run Snyk to check for vulnerabilities
+        run: snyk test
+
+      - name: Monitor Snyk project
+        run: snyk monitor
+
+  semgrep:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Clone additional repository
+        run: git clone https://github.com/jai3747/APP-.git additional-repo
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Auth Semgrep
+        env:
+          SEMGREP_TOKEN: ${{ secrets.SEMGREP_TOKEN }}
+        run: semgrep --config p/ci --auth $SEMGREP_TOKEN .
+
+      - name: Run Semgrep
+        env:
+          SEMGREP_TOKEN: ${{ secrets.SEMGREP_TOKEN }}
+        run: semgrep --config "p/ci" .
