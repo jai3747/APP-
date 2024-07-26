@@ -3,11 +3,11 @@ name: Security Scan
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
-  
+      - main
+
 jobs:
   snyk:
     runs-on: ubuntu-latest
@@ -32,10 +32,10 @@ jobs:
         run: snyk auth $SNYK_TOKEN
 
       - name: Run Snyk to check for vulnerabilities
-        run: snyk test
+        run: snyk test additional-repo
 
       - name: Monitor Snyk project
-        run: snyk monitor
+        run: snyk monitor additional-repo
 
   semgrep:
     runs-on: ubuntu-latest
@@ -57,9 +57,9 @@ jobs:
       - name: Auth Semgrep
         env:
           SEMGREP_TOKEN: ${{ secrets.SEMGREP_TOKEN }}
-        run: semgrep --config p/ci --auth $SEMGREP_TOKEN .
+        run: semgrep --config p/ci --auth $SEMGREP_TOKEN additional-repo
 
       - name: Run Semgrep
         env:
           SEMGREP_TOKEN: ${{ secrets.SEMGREP_TOKEN }}
-        run: semgrep --config "p/ci" .
+        run: semgrep --config "p/ci" additional-repo
