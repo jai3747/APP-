@@ -21,16 +21,19 @@ jobs:
       - name: Clone additional repository
         run: git clone https://github.com/jai3747/APP-
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Install Node.js dependencies
+      - name: Set up Node.js name 
         run: npm install
 
-          
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
 
+      - name: Run audit-ci
+        run: npx audit-ci --config audit-ci.json
+
+      - name: Run ESLint
+        run: npx eslint .
+        
+    
       - name: Install Snyk
         run: npm install -g snyk
 
