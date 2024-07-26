@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -29,23 +29,13 @@ jobs:
       working-directory: ./backend
       run: npm install
 
-    - name: Run Snyk on frontend
-      if: exists('frontend/package.json')
-      uses: snyk/actions/node@master
-      with:
-        command: test
-        project_directory: ./frontend
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    - name: Check for frontend package.json and run Snyk
+      if: ${{ hashFiles('frontend/package.json') != '' }}
+      run: snyk test --org=YOUR_ORG_NAME --file=frontend/package.json --json
 
-    - name: Run Snyk on backend
-      if: exists('backend/package.json')
-      uses: snyk/actions/node@master
-      with:
-        command: test
-        project_directory: ./backend
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    - name: Check for backend package.json and run Snyk
+      if: ${{ hashFiles('backend/package.json') != '' }}
+      run: snyk test --org=YOUR_ORG_NAME --file=backend/package.json --json
 
     - name: Set up Python
       uses: actions/setup-python@v2
