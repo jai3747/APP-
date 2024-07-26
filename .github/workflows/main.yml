@@ -1,67 +1,49 @@
-name: Security Scan
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
-  snyk:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Create and navigate to directory
-        run: mkdir additional && cd additional && git clone https://github.com/jai3747/APP- .
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
 
-      - name: List files in directory
-        run: ls -la
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm install
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm install
 
-      - name: Install Node.js dependencies
-        run: npm install
-        
-      - name: Install Snyk
-        run: npm install -g snyk
+    - name: Snyk Scan
+      uses: snyk/actions/node@v1.5.0
+      with:
+        command: test
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-      - name: Auth Snyk
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: snyk auth $SNYK_TOKEN
+    - name: Install Semgrep
+      run: pip install semgrep
 
-      - name: Run Snyk to check for vulnerabilities
-        run: snyk test 
+    - name: Run Semgrep
+      run: semgrep --config auto --json > semgrep-report.json
 
-      - name: Monitor Snyk project
-        run: snyk monitor 
-
-  semgrep:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Create and navigate to directory
-        run: mkdir additional && cd additional && git clone https://github.com/jai3747/APP- .
-
-      - name: List files in directory
-        run: ls -la
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Install Semgrep
-        run: pip install semgrep
-
-      - name: Run Semgrep
-        run: semgrep --config "p/ci" .
+    - name: Upload Semgrep report
+      uses: actions/upload-artifact@v2
+      with:
+        name: semgrep-report
+        path: semgrep-report.json
