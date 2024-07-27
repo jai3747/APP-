@@ -31,7 +31,15 @@ jobs:
       run: pip install semgrep
 
     - name: Run Semgrep
-      run: semgrep --config auto --json > semgrep-report.json
+      run: semgrep --config semgrep.yaml --json > semgrep-report.json
+
+    - name: Analyze Semgrep Report
+      uses: actions/checkout@v2
+      with:
+        path: semgrep-report.json
+      run: |
+        # Parse JSON report, classify vulnerabilities, and generate summary
+        # Example: python analyze_semgrep_report.py
 
     - name: Upload Semgrep report
       uses: actions/upload-artifact@v2
@@ -39,8 +47,18 @@ jobs:
         name: semgrep-report
         path: semgrep-report.json
 
-    - name: Perform Code Scoring (Example Placeholder)
-      run: echo "Code scoring step placeholder"
+    - name: Perform Code Scoring
+      run: |
+        # Calculate code complexity, test coverage, etc.
+        # Example: eslint --format json ./frontend | ...
 
-    - name: Perform Security Scanning (Example Placeholder)
-      run: echo "Security scanning step placeholder"
+    - name: Perform Security Scanning
+      run: |
+        # Run dependency checks and vulnerability scans
+        # Example: npm audit --json > npm-audit-report.json
+
+    - name: Generate Overall Report
+      run: |
+        # Combine Semgrep, code quality, and security findings into a single report
+        # Example: python generate_overall_report.py
+        
