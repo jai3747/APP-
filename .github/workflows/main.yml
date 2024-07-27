@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use a runner with required tools pre-installed
 
     steps:
     - name: Checkout code
@@ -19,46 +19,56 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '14'  # Specify desired Node.js version
 
     - name: Install frontend dependencies
-      run: npm install --prefix ./frontend
+      run: npm install --prefix ./frontend  # Install project dependencies
 
     - name: Install Semgrep
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
-      run: pip install semgrep
+        python-version: '3.x'  # Specify desired Python version
 
-    - name: Run Semgrep
-      run: semgrep --config semgrep.yaml --json > semgrep-report.json
+    - name: Run Semgrep analysis
+      run: semgrep --config semgrep.yaml --json > semgrep-report.json  # Generate JSON report
 
-    - name: Analyze Semgrep Report
-      uses: actions/checkout@v2
-      with:
-        path: semgrep-report.json
-      run: |
-        # Parse JSON report, classify vulnerabilities, and generate summary
-        # Example: python analyze_semgrep_report.py
+    - name: Analyze Semgrep Report (placeholder)
+      # Replace with a custom script (e.g., Python) to:
+      #   - Parse the JSON report
+      #   - Classify vulnerabilities (critical, high, medium, low)
+      #   - Generate a human-readable summary with explanations and remediation suggestions
+      #   - (Optional) Create issues in your issue tracker for identified vulnerabilities
+      run: |  # Placeholder script
+        echo "** Semgrep Report Analysis Placeholder **"
+        echo "** (Replace with a custom script to process the semgrep-report.json) **"
 
     - name: Upload Semgrep report
       uses: actions/upload-artifact@v2
       with:
         name: semgrep-report
-        path: semgrep-report.json
+        path: semgrep-report.json  # Upload the generated JSON report for potential review
 
-    - name: Perform Code Scoring
-      run: |
-        # Calculate code complexity, test coverage, etc.
-        # Example: eslint --format json ./frontend | ...
+    - name: Perform Code Scoring (placeholder)
+      # Replace with a custom script (e.g., ESLint) to:
+      #   - Calculate code complexity, test coverage, maintainability metrics
+      #   - Generate a report or integrate with code quality tools
+      run: |  # Placeholder script
+        echo "** Code Scoring Placeholder **"
+        echo "** (Replace with a script to calculate code quality metrics) **"
 
-    - name: Perform Security Scanning
-      run: |
-        # Run dependency checks and vulnerability scans
-        # Example: npm audit --json > npm-audit-report.json
+    - name: Perform Security Scanning (placeholder)
+      # Replace with relevant security scanning tools (e.g., npm audit, Snyk) to:
+      #   - Identify dependency vulnerabilities
+      #   - Generate a report or integrate with security scanners
+      run: |  # Placeholder script
+        echo "** Security Scanning Placeholder **"
+        echo "** (Replace with security scanning tools) **"
 
-    - name: Generate Overall Report
-      run: |
-        # Combine Semgrep, code quality, and security findings into a single report
-        # Example: python generate_overall_report.py
-        
+    - name: Generate Overall Report (placeholder)
+      # Replace with a custom script (e.g., Python) to:
+      #   - Combine Semgrep, code quality, and security findings
+      #   - Generate a comprehensive overall report for stakeholders
+      run: |  # Placeholder script
+        echo "** Overall Report Placeholder **"
+        echo "** (Replace with a script to combine findings into a single report) **"
+
