@@ -10,65 +10,64 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # Use a runner with required tools pre-installed
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3
       with:
-        node-version: '14'  # Specify desired Node.js version
+        node-version: 16  # Adjust Node.js version as needed
 
     - name: Install frontend dependencies
-      run: npm install --prefix ./frontend  # Install project dependencies
+      run: npm install --prefix ./frontend
 
     - name: Install Semgrep
-      uses: actions/setup-python@v2
+      uses: returnable/semgrep@v1
       with:
-        python-version: '3.x'  # Specify desired Python version
+        version: 'v54.0'  # Adjust Semgrep version as needed
 
     - name: Run Semgrep analysis
-      run: semgrep --config semgrep.yaml --json > semgrep-report.json  # Generate JSON report
+      run: semgrep --config semgrep.yaml --json > semgrep-report.json
 
-    - name: Analyze Semgrep Report (placeholder)
-      # Replace with a custom script (e.g., Python) to:
-      #   - Parse the JSON report
-      #   - Classify vulnerabilities (critical, high, medium, low)
-      #   - Generate a human-readable summary with explanations and remediation suggestions
-      #   - (Optional) Create issues in your issue tracker for identified vulnerabilities
-      run: |  # Placeholder script
-        echo "** Semgrep Report Analysis Placeholder **"
-        echo "** (Replace with a custom script to process the semgrep-report.json) **"
+    - name: Analyze Semgrep Report
+      uses: actions/checkout@v3
+      with:
+        path: semgrep-report.json
+      run: |
+        # Replace with your custom script to analyze the Semgrep report
+        # Example using Python:
+        import json
+
+        with open('semgrep-report.json', 'r') as f:
+          data = json.load(f)
+
+        # Process the report data as needed
+        # ...
 
     - name: Upload Semgrep report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: semgrep-report
-        path: semgrep-report.json  # Upload the generated JSON report for potential review
+        path: semgrep-report.json
 
-    - name: Perform Code Scoring (placeholder)
-      # Replace with a custom script (e.g., ESLint) to:
-      #   - Calculate code complexity, test coverage, maintainability metrics
-      #   - Generate a report or integrate with code quality tools
-      run: |  # Placeholder script
-        echo "** Code Scoring Placeholder **"
-        echo "** (Replace with a script to calculate code quality metrics) **"
+    - name: Perform Code Scoring
+      run: |
+        # Replace with your code scoring tools and commands
+        # Example using ESLint:
+        npx eslint --format json ./frontend | ...
 
-    - name: Perform Security Scanning (placeholder)
-      # Replace with relevant security scanning tools (e.g., npm audit, Snyk) to:
-      #   - Identify dependency vulnerabilities
-      #   - Generate a report or integrate with security scanners
-      run: |  # Placeholder script
-        echo "** Security Scanning Placeholder **"
-        echo "** (Replace with security scanning tools) **"
+    - name: Perform Security Scanning
+      run: |
+        # Replace with your security scanning tools and commands
+        # Example using npm audit:
+        npm audit --json > npm-audit-report.json
 
-    - name: Generate Overall Report (placeholder)
-      # Replace with a custom script (e.g., Python) to:
-      #   - Combine Semgrep, code quality, and security findings
-      #   - Generate a comprehensive overall report for stakeholders
-      run: |  # Placeholder script
-        echo "** Overall Report Placeholder **"
-        echo "** (Replace with a script to combine findings into a single report) **"
-
+    - name: Generate Overall Report
+      run: |
+        # Replace with your script to combine reports and generate an overall report
+        # Example:
+        # ...
+        
