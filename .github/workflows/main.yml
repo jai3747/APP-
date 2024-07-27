@@ -19,7 +19,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 16  # Adjust Node.js version as needed
+        node-version: 16
 
     - name: Install frontend dependencies
       run: npm install --prefix ./frontend
@@ -27,15 +27,12 @@ jobs:
     - name: Install Semgrep
       uses: returnable/semgrep@v1
       with:
-        version: 'v54.0'  # Adjust Semgrep version as needed
+        version: 'v54.0'
 
     - name: Run Semgrep analysis
       run: semgrep --config semgrep.yaml --json > semgrep-report.json
 
     - name: Analyze Semgrep Report
-      uses: actions/checkout@v3
-      with:
-        path: semgrep-report.json
       run: |
         # Replace with your custom script to analyze the Semgrep report
         # Example using Python:
