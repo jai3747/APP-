@@ -11,6 +11,37 @@ permissions:
   security-events: write
 
 jobs:
+  snyk:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Snyk
+      uses: snyk/actions/setup@v1
+      with:
+        version: 'latest'
+
+    - name: Run Snyk to check for vulnerabilities
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      run: snyk test --all-projects --json > snyk_report.json
+
+    - name: Upload Snyk report
+      uses: actions/upload-artifact@v2
+      with:
+        name: snyk-report
+        path: snyk_report.json
+
+    - name: Convert Snyk report to SARIF
+      run: snyk-to-sarif --input snyk_report.json --output snyk_report.sarif
+
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: snyk_report.sarif
+
   semgrep:
     runs-on: ubuntu-latest
 
@@ -30,7 +61,7 @@ jobs:
       run: python --version
 
     - name: Run Semgrep
-      run: semgrep --config auto --json --output semgrep_report.json
+      run: semgrep --config auto --json > semgrep_report.json
 
     - name: Upload Semgrep report
       uses: actions/upload-artifact@v2
@@ -39,7 +70,7 @@ jobs:
         path: semgrep_report.json
 
     - name: Convert Semgrep report to SARIF
-      run: semgrep --config auto --sarif --output semgrep.sarif
+      run: semgrep --config auto --sarif > semgrep.sarif
 
     - name: Upload SARIF file
       uses: github/codeql-action/upload-sarif@v2
